@@ -1,4 +1,4 @@
-// version 0.3.0.1.22.11.22
+// version 0.3.0.1.22.14.16
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -18,6 +18,10 @@ public class scheduleMaker extends JFrame {
     File file;
     JLabel[] wDays;
     String[][] schedule = new String[5][8];
+    JButton save;
+    JButton importButton;
+    JLabel importLabel;
+    JTextArea[][] table = new JTextArea[5][8];
     File config = new File("src/config.txt");
 
     public scheduleMaker(String title) {
@@ -41,21 +45,35 @@ public class scheduleMaker extends JFrame {
         }
 
     }
-     private void loadSchedule(File config){
-        String location = new String();
-         try {
-             Scanner sc = new Scanner(config)
-            location =  sc.findInLine("Schedule Path: ")
-                    //TODO: Find out how replace method woks to trim "Schedule Path" out of the location string:
-            location.re
 
+
+     private void loadSchedule(File config, String parameter){
+        String location = new String();
+        String line = new String();
+         try {
+             Scanner sc = new Scanner(config);
+            sc.findInLine(parameter);
+            location = sc.nextLine();
+            sc.close();
+            File f = new File(location);
+            sc = new Scanner(f);
+            for(int p=0; sc.hasNextLine();p++){
+                line = sc.nextLine();
+                String[] split_array = line.split("%d.");
+                for (int k=0; k < split_array.length; k++) {
+                    table[p][k].setText(split_array [k].trim());
+                }
+
+            }
 
 
          }catch(IOException e ){
 
          }
 
-     }
+
+        }
+
 
 
 
@@ -104,30 +122,17 @@ public class scheduleMaker extends JFrame {
     }
 
 
-//	private boolean checkIfTableExists(String tableLocation) {
-//		boolean exists = false;
-//		File table = new File(tableLocation);
-//		
-//		if(table.exists()) {
-//			exists = true;
-//		}		
-//		return exists;
-//	}
-
-
-
-
     public void buildScheduleMaker() {
         final int boxSizeX = sizeX * 3 / 20;
         final int boxSizeY = sizeY * 3 / 32;
         Border border = BorderFactory.createLineBorder(Color.BLACK);
 
-        JButton save = new JButton("Save");
-        JButton importButton = new JButton("Import");
-        JLabel importLabel = new JLabel();
+        save = new JButton("Save");
+        importButton = new JButton("Import");
+        importLabel = new JLabel();
         wDays = new JLabel[5];
 
-        JTextArea[][] table = new JTextArea[5][8];
+
 
         ///
         ///Creating table and labels
@@ -157,6 +162,12 @@ public class scheduleMaker extends JFrame {
         wDays[2].setText("Сряда");
         wDays[3].setText("Четвъртък");
         wDays[4].setText("Петък");
+
+        //Loading saved schedule if excists
+        //TODO: no need of SChedule path remove from method;
+        if(config.exists()){
+            loadSchedule(config,"Schedule Path:  ");
+        }
 
         ///
         ///Creating Save button, Import button import label and importField
