@@ -1,4 +1,4 @@
-// version 0.3.0.1.22.14.16
+// version 0.5.0.4.22.22.30
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -30,12 +30,14 @@ public class mainMenu extends JFrame {
 	private void buildMenu() {
 		JButton schedule = new JButton("Schedule");
 		JButton homework = new JButton("Homework");
-		// TODO :
-		//Make a label
-		//Make a log-inn menu
-		//Text size and font
-		//Colours
-		
+		/*
+		 TODO :
+		Make a label
+		Make a log-inn menu
+		Text size and font
+		Colours
+		*/
+
 		schedule.setBounds(sizeX/4, sizeY/4, sizeX/2, sizeY/4);
 		schedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -68,7 +70,7 @@ public class mainMenu extends JFrame {
 
 
 	public static void main(String[] args) {
-		new mainMenu("a");
+		new mainMenu("Student helper");
 
 	}
 

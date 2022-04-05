@@ -1,4 +1,5 @@
-// version 0.3.0.1.22.14.16
+// version 0.5.0.4.22.22.30
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -8,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.nio.file.NotDirectoryException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -34,53 +36,54 @@ public class scheduleMaker extends JFrame {
         buildScheduleMaker();
 
     }
-    private void createConfig(){
+
+    private void createConfig() {
         try {
             config.createNewFile();
             FileWriter fw = new FileWriter(config);
             fw.write("Schedule Path: " + importField.getText() + "\n");
 
-        }catch(IOException e ){
+        } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Something wrong with path");
         }
 
     }
 
 
-     private void loadSchedule(File config, String parameter){
+    private void loadSchedule(File config) {
+        System.out.println("Started loading schedule, ln51");
+        System.out.println("Using config at location: " + config.getPath());
         String location = new String();
         String line = new String();
-         try {
-             Scanner sc = new Scanner(config);
-            sc.findInLine(parameter);
+        try {
+            Scanner sc = new Scanner(config);
             location = sc.nextLine();
+//            sc = new Scanner(location);
+//             sc.skip("Schedule Path:  ");
+            //  location = sc.nextLine();*/
+
+            System.out.println("The location of the schedule to load is " + location);
             sc.close();
             File f = new File(location);
             sc = new Scanner(f);
-            for(int p=0; sc.hasNextLine();p++){
+            for (int p = 0; sc.hasNextLine(); p++) {
                 line = sc.nextLine();
-                String[] split_array = line.split("%d.");
-                for (int k=0; k < split_array.length; k++) {
-                    table[p][k].setText(split_array [k].trim());
+                System.out.println("The line at the moment is " + p + "." + line);
+                String[] split_array = line.split("\\d\\.");
+                System.out.println("split_array is " + Arrays.toString(split_array));
+                for (int k = 0; k + 1 < split_array.length; k++) {
+                    table[p][k].setText(split_array[k + 1].trim());
+                    System.out.println("Table + " + p + ":" + k + " is" + table[p][k].getText());
                 }
-
             }
-
-
-         }catch(IOException e ){
-
-         }
-
+        } catch (IOException e) {
 
         }
+    }
 
 
-
-
-
-
-//TODO: close FileWriter, ...Reader, etc.
-//TODO: Make Font size And design of export Table.
+    //TODO: close FileWriter, ...Reader, etc.
+    //TODO: Make Font size And design of export Table.
     //TODO: Exception management
     private void saveSchedule(JTextArea[][] t) throws IOException {
         for (int p = 0; p < 5; p++) {
@@ -95,28 +98,26 @@ public class scheduleMaker extends JFrame {
             file.createNewFile();
         }
 
-        if(!config.exists()){
+        if (!config.exists()) {
             createConfig();
         }
 
-        try  {
+        try {
             FileWriter fw = new FileWriter(file, false);
 
             for (int p = 0; p < 5; p++) {
-                fw.write(wDays[p].getText() +":"+ "  ");
+                fw.write(wDays[p].getText() + ":" + "  ");
                 for (int k = 0; k < 8; k++) {
-                    fw.write(k+1 + "." + schedule[p][k] + " ");
+                    fw.write(k + 1 + "." + schedule[p][k] + " ");
 
                 }
                 fw.write("\n");
             }
             fw.flush();
 
-        }catch(IOException e ){
+        } catch (IOException e) {
 
         }
-
-
 
 
     }
@@ -133,13 +134,9 @@ public class scheduleMaker extends JFrame {
         wDays = new JLabel[5];
 
 
-
-        ///
-        ///Creating table and labels
-        ///
+        ///Creating table and label
 
         // TODO: Make working borders(text doesn't go out of box)
-
         for (int p = 0; p < 5; p++) {
             wDays[p] = new JLabel();
             wDays[p].setBounds(sizeX / 32 + p * boxSizeX, sizeY / 32 + 20, boxSizeX, 20);
@@ -164,14 +161,15 @@ public class scheduleMaker extends JFrame {
         wDays[4].setText("Петък");
 
         //Loading saved schedule if excists
-        //TODO: no need of SChedule path remove from method;
-        if(config.exists()){
-            loadSchedule(config,"Schedule Path:  ");
-        }
 
-        ///
+        //TODO: no need of SChedule path remove from method;
+        System.out.println("Checking if config excists, ln 169");
+        if (config.exists()) {
+            System.out.println("Config excists, ln170");
+            loadSchedule(config);
+        }
+      //TODO Find a way to read config; reached here 05.4
         ///Creating Save button, Import button import label and importField
-        ///
 
         //importButton.setBounds(table[4][1].getX()+boxSizeX+((sizeX-table[4][1].getX()-sizeX)/4), table[4][1].getY(), (sizeX-table[4][1].getX()-sizeX)/2, boxSizeY);
         //TODO Make the scale(no numbers in setBounds())
