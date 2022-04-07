@@ -1,4 +1,4 @@
-// version 0.5.0.4.22.22.30
+// version 0.7.0.4.22.22.37
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -26,6 +26,7 @@ public class scheduleMaker extends JFrame {
     JTextArea[][] table = new JTextArea[5][8];
     File config = new File("src/config.txt");
 
+
     public scheduleMaker(String title) {
         setTitle(title);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -50,6 +51,7 @@ public class scheduleMaker extends JFrame {
     }
 
 
+
     private void loadSchedule(File config) {
         System.out.println("Started loading schedule, ln51");
         System.out.println("Using config at location: " + config.getPath());
@@ -58,9 +60,10 @@ public class scheduleMaker extends JFrame {
         try {
             Scanner sc = new Scanner(config);
             location = sc.nextLine();
-//            sc = new Scanner(location);
-//             sc.skip("Schedule Path:  ");
-            //  location = sc.nextLine();*/
+            sc.close();
+            sc = new Scanner(location);
+             sc.skip("Schedule Path: ");
+             location = sc.nextLine();
 
             System.out.println("The location of the schedule to load is " + location);
             sc.close();
@@ -80,6 +83,7 @@ public class scheduleMaker extends JFrame {
 
         }
     }
+
 
 
     //TODO: close FileWriter, ...Reader, etc.
@@ -162,13 +166,13 @@ public class scheduleMaker extends JFrame {
 
         //Loading saved schedule if excists
 
-        //TODO: no need of SChedule path remove from method;
+
         System.out.println("Checking if config excists, ln 169");
         if (config.exists()) {
-            System.out.println("Config excists, ln170");
+            System.out.println("Config exists, ln170");
             loadSchedule(config);
         }
-      //TODO Find a way to read config; reached here 05.4
+
         ///Creating Save button, Import button import label and importField
 
         //importButton.setBounds(table[4][1].getX()+boxSizeX+((sizeX-table[4][1].getX()-sizeX)/4), table[4][1].getY(), (sizeX-table[4][1].getX()-sizeX)/2, boxSizeY);
