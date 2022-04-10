@@ -1,4 +1,4 @@
-// version 0.7.0.4.22.22.37
+// version 0.10.0.4.22.19.20
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -38,12 +38,14 @@ public class scheduleMaker extends JFrame {
 
     }
 
+
     private void createConfig() {
         try {
             config.createNewFile();
             FileWriter fw = new FileWriter(config);
             fw.write("Schedule Path: " + importField.getText() + "\n");
-
+            System.out.println("Wrote in config : " + importField.getText() );
+            fw.flush();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Something wrong with path");
         }
@@ -51,7 +53,7 @@ public class scheduleMaker extends JFrame {
     }
 
 
-
+   //Loading schedule file from a cfg path
     private void loadSchedule(File config) {
         System.out.println("Started loading schedule, ln51");
         System.out.println("Using config at location: " + config.getPath());
@@ -76,7 +78,7 @@ public class scheduleMaker extends JFrame {
                 System.out.println("split_array is " + Arrays.toString(split_array));
                 for (int k = 0; k + 1 < split_array.length; k++) {
                     table[p][k].setText(split_array[k + 1].trim());
-                    System.out.println("Table + " + p + ":" + k + " is" + table[p][k].getText());
+                    System.out.println("Table " + p + ":" + k + " is" + table[p][k].getText());
                 }
             }
         } catch (IOException e) {
@@ -104,6 +106,7 @@ public class scheduleMaker extends JFrame {
 
         if (!config.exists()) {
             createConfig();
+            System.out.println("Created config ln108");
         }
 
         try {
@@ -139,7 +142,7 @@ public class scheduleMaker extends JFrame {
 
 
         ///Creating table and label
-
+        //TODO: Number the schedule
         // TODO: Make working borders(text doesn't go out of box)
         for (int p = 0; p < 5; p++) {
             wDays[p] = new JLabel();
