@@ -1,5 +1,6 @@
 // version 0.10.0.4.22.19.20
 
+import javax.security.auth.Subject;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 public class scheduleMaker extends JFrame {
     final int sizeX = 1400;
     final int sizeY = 800;
+    String[] subjects;
     JTextField importField = new JTextField();
     File file;
     JLabel[] wDays;
@@ -41,12 +43,13 @@ public class scheduleMaker extends JFrame {
 
     private void createConfig() {
         try {
-            config.createNewFile();
+
             FileWriter fw = new FileWriter(config);
             fw.write("Schedule Path: " + importField.getText() + "\n");
             System.out.println("Wrote in config : " + importField.getText() );
             fw.flush();
         } catch (IOException e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Something wrong with path");
         }
 
@@ -66,7 +69,7 @@ public class scheduleMaker extends JFrame {
             sc = new Scanner(location);
              sc.skip("Schedule Path: ");
              location = sc.nextLine();
-
+            importField.setText(location);
             System.out.println("The location of the schedule to load is " + location);
             sc.close();
             File f = new File(location);
@@ -105,8 +108,12 @@ public class scheduleMaker extends JFrame {
         }
 
         if (!config.exists()) {
+            config.createNewFile();
             createConfig();
             System.out.println("Created config ln108");
+        }else if (importField.getText()!=""){
+            createConfig();
+
         }
 
         try {
@@ -114,8 +121,21 @@ public class scheduleMaker extends JFrame {
 
             for (int p = 0; p < 5; p++) {
                 fw.write(wDays[p].getText() + ":" + "  ");
-                for (int k = 0; k < 8; k++) {
+                for (int k = 0, m=0; k < 8; k++) {
                     fw.write(k + 1 + "." + schedule[p][k] + " ");
+
+                    //TODO: Finish sorting
+
+                    subjects[0] = new String();
+                    for(int q = 0; q< subjects.length;q++) {
+
+                            if (subjects[q] != null || schedule[p][k] == subjects[q]) {
+                                break;
+                            }
+                        subjects[m] = new String(schedule[p][k]);
+                        m++;
+                    }
+
 
                 }
                 fw.write("\n");
@@ -126,7 +146,7 @@ public class scheduleMaker extends JFrame {
 
         }
 
-
+        System.out.println(Arrays.toString(subjects));
     }
 
 
