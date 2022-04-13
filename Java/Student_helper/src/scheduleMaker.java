@@ -1,4 +1,4 @@
-// version 0.10.0.4.22.19.20
+// version 0.13.0.4.22.12.45
 
 import javax.security.auth.Subject;
 import javax.swing.*;
@@ -11,13 +11,16 @@ import java.awt.event.MouseListener;
 import java.io.*;
 import java.nio.file.NotDirectoryException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 
 public class scheduleMaker extends JFrame {
     final int sizeX = 1400;
     final int sizeY = 800;
-    String[] subjects;
+    //TODO remove global variables, where necessary
+    String location = new String();
+    LinkedList<String> subjects = new LinkedList<String>();
     JTextField importField = new JTextField();
     File file;
     JLabel[] wDays;
@@ -60,7 +63,7 @@ public class scheduleMaker extends JFrame {
     private void loadSchedule(File config) {
         System.out.println("Started loading schedule, ln51");
         System.out.println("Using config at location: " + config.getPath());
-        String location = new String();
+
         String line = new String();
         try {
             Scanner sc = new Scanner(config);
@@ -111,7 +114,9 @@ public class scheduleMaker extends JFrame {
             config.createNewFile();
             createConfig();
             System.out.println("Created config ln108");
-        }else if (importField.getText()!=""){
+            //TODO Writes in config every time save is pressed
+            //Some problem test
+        }else if (importField.getText()!="" && !importField.getText().equals(location)){
             createConfig();
 
         }
@@ -123,30 +128,23 @@ public class scheduleMaker extends JFrame {
                 fw.write(wDays[p].getText() + ":" + "  ");
                 for (int k = 0, m=0; k < 8; k++) {
                     fw.write(k + 1 + "." + schedule[p][k] + " ");
-
-                    //TODO: Finish sorting
-
-                    subjects[0] = new String();
-                    for(int q = 0; q< subjects.length;q++) {
-
-                            if (subjects[q] != null || schedule[p][k] == subjects[q]) {
-                                break;
-                            }
-                        subjects[m] = new String(schedule[p][k]);
-                        m++;
+                    // Sorting subjects
+                    subjects.add(schedule[p][k]);
+                    for(int l = 0; l< subjects.size()-1; l++){
+                        //System.out.println("Checking if " + subjects.getLast() +" == " +subjects.get(l));
+                        if(subjects.getLast().equals(subjects.get(l)) || subjects.getLast().isEmpty()){
+                           // System.out.println("Removed " + subjects.getLast());
+                            subjects.removeLast();
+                        }
                     }
-
-
                 }
                 fw.write("\n");
             }
             fw.flush();
-
         } catch (IOException e) {
-
         }
-
-        System.out.println(Arrays.toString(subjects));
+        //TODO Maybe sort elements alphabetically
+        System.out.println(subjects);
     }
 
 
@@ -159,21 +157,26 @@ public class scheduleMaker extends JFrame {
         importButton = new JButton("Import");
         importLabel = new JLabel();
         wDays = new JLabel[5];
-
+        JLabel[] number =new JLabel[8];
 
         ///Creating table and label
-        //TODO: Number the schedule
-        // TODO: Make working borders(text doesn't go out of box)
+        // TODO: Maybe make scrollable text area and simple borders.
         for (int p = 0; p < 5; p++) {
             wDays[p] = new JLabel();
             wDays[p].setBounds(sizeX / 32 + p * boxSizeX, sizeY / 32 + 20, boxSizeX, 20);
             add(wDays[p]);
 
             for (int k = 0; k < 8; k++) {
+                number[k] = new JLabel();
+                number[k].setBounds(sizeX/32 - 10, 40 + sizeY / 32 + k * boxSizeY,10, boxSizeY );
+                number[k].setText(String.valueOf(k+1));
+                add(number[k]);
                 table[p][k] = new JTextArea();
                 table[p][k].setBounds(sizeX / 32 + p * boxSizeX, 40 + sizeY / 32 + k * boxSizeY, boxSizeX, boxSizeY);
-                table[p][k].setBorder(BorderFactory.createCompoundBorder(border,
+                table[p][k].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK),
                         BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+                table[p][k].setLineWrap(true);
+                table[p][k].setWrapStyleWord(true);
 
                 add(table[p][k]);
             }
