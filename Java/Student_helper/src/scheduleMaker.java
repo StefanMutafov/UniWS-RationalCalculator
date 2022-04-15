@@ -223,6 +223,30 @@ public class scheduleMaker extends JFrame {
         importLabel.setText("Enter Location");
 
         importButton.setBounds(table[4][1].getX() + boxSizeX + 50, table[4][5].getY(), 200, boxSizeY);
+        importButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (!config.exists()) {
+                        config.createNewFile();
+                        createConfig();
+                        System.out.println("Created config ln232");
+                        //Some problem test
+                    } else if (importField.getText() != "" && !importField.getText().equals(location)) {
+                        createConfig();
+                    }
+
+                    loadSchedule(config);
+                }catch (IOException ex){
+                        ex.printStackTrace();
+                    }
+
+                    }
+
+
+
+
+        });
 
         add(save);
         add(importLabel);
