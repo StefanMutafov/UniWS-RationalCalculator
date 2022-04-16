@@ -1,4 +1,4 @@
-// version 0.13.0.4.22.12.45
+// version 0.16.0.4.22.16.05
 
 import javax.security.auth.Subject;
 import javax.swing.*;
@@ -41,6 +41,7 @@ public class scheduleMaker extends JFrame {
         setVisible(true);
         buildScheduleMaker();
 
+
     }
 
 
@@ -77,6 +78,7 @@ public class scheduleMaker extends JFrame {
             sc.close();
             File f = new File(location);
             sc = new Scanner(f);
+            subjects.clear();
             for (int p = 0; sc.hasNextLine(); p++) {
                 line = sc.nextLine();
                 System.out.println("The line at the moment is " + p + "." + line);
@@ -84,9 +86,19 @@ public class scheduleMaker extends JFrame {
                 System.out.println("split_array is " + Arrays.toString(split_array));
                 for (int k = 0; k + 1 < split_array.length; k++) {
                     table[p][k].setText(split_array[k + 1].trim());
+                    // Sorting subjects
+                    subjects.add(table[p][k].getText());
+                    for(int l = 0; l< subjects.size()-1; l++){
+                        //System.out.println("Checking if " + subjects.getLast() +" == " +subjects.get(l));
+                        if(subjects.getLast().equals(subjects.get(l)) || subjects.getLast().isEmpty()){
+                            // System.out.println("Removed " + subjects.getLast());
+                            subjects.removeLast();
+                        }
+                    }
                     System.out.println("Table " + p + ":" + k + " is" + table[p][k].getText());
                 }
             }
+            System.out.println(subjects);
         } catch (IOException e) {
 
         }
@@ -101,10 +113,9 @@ public class scheduleMaker extends JFrame {
         for (int p = 0; p < 5; p++) {
             for (int k = 0; k < 8; k++) {
                 schedule[p][k] = t[p][k].getText();
-
             }
-
         }
+
         file = new File(importField.getText());
         if (!file.exists()) {
             file.createNewFile();
@@ -118,12 +129,11 @@ public class scheduleMaker extends JFrame {
             //Some problem test
         }else if (importField.getText()!="" && !importField.getText().equals(location)){
             createConfig();
-
         }
 
         try {
             FileWriter fw = new FileWriter(file, false);
-
+            subjects.clear();
             for (int p = 0; p < 5; p++) {
                 fw.write(wDays[p].getText() + ":" + "  ");
                 for (int k = 0, m=0; k < 8; k++) {
