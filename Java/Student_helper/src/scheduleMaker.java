@@ -95,7 +95,7 @@ public class scheduleMaker extends JFrame {
                             subjects.removeLast();
                         }
                     }
-                    System.out.println("Table " + p + ":" + k + " is" + table[p][k].getText());
+                    System.out.println("Table " + p + ":" + k + " is " + table[p][k].getText());
                 }
             }
             System.out.println(subjects);
