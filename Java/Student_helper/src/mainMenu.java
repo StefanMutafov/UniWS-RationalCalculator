@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.SQLOutput;
 
 import javax.swing.*;
 
@@ -71,6 +72,7 @@ public class mainMenu extends JFrame {
 
 	public static void main(String[] args) {
 		new mainMenu("Student helper");
+		//System.out.println("This is  ааааааа бббббб вввввв Понеделник and this ьяья яьяьяуъа ее");
 
 	}
 

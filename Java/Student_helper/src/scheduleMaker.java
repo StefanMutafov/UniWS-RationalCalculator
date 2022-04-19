@@ -1,15 +1,13 @@
 // version 0.16.0.4.22.16.05
 
-import javax.security.auth.Subject;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.*;
-import java.nio.file.NotDirectoryException;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -18,7 +16,7 @@ import java.util.Scanner;
 public class scheduleMaker extends JFrame {
     final int sizeX = 1400;
     final int sizeY = 800;
-    //TODO remove global variables, where necessary
+
     String location = new String();
     LinkedList<String> subjects = new LinkedList<String>();
     JTextField importField = new JTextField();
@@ -40,8 +38,6 @@ public class scheduleMaker extends JFrame {
         setLayout(null);
         setVisible(true);
         buildScheduleMaker();
-
-
     }
 
 
@@ -52,9 +48,10 @@ public class scheduleMaker extends JFrame {
             fw.write("Schedule Path: " + importField.getText() + "\n");
             System.out.println("Wrote in config : " + importField.getText() );
             fw.flush();
+            fw.close();
         } catch (IOException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Something wrong with path");
+            JOptionPane.showMessageDialog(null, "Something went wrong, please restart the program");
         }
 
     }
@@ -100,15 +97,13 @@ public class scheduleMaker extends JFrame {
             }
             System.out.println(subjects);
         } catch (IOException e) {
-
+            JOptionPane.showMessageDialog(null, "Couldn't load your schedule");
         }
     }
 
 
 
-    //TODO: close FileWriter, ...Reader, etc.
     //TODO: Make Font size And design of export Table.
-    //TODO: Exception management
     private void saveSchedule(JTextArea[][] t) throws IOException {
         for (int p = 0; p < 5; p++) {
             for (int k = 0; k < 8; k++) {
@@ -125,9 +120,7 @@ public class scheduleMaker extends JFrame {
             config.createNewFile();
             createConfig();
             System.out.println("Created config ln108");
-            //TODO Writes in config every time save is pressed
-            //Some problem test
-        }else if (importField.getText()!="" && !importField.getText().equals(location)){
+        }else if (!importField.getText().equals("") && !importField.getText().equals(location)){
             createConfig();
         }
 
@@ -136,7 +129,7 @@ public class scheduleMaker extends JFrame {
             subjects.clear();
             for (int p = 0; p < 5; p++) {
                 fw.write(wDays[p].getText() + ":" + "  ");
-                for (int k = 0, m=0; k < 8; k++) {
+                for (int k = 0; k < 8; k++) {
                     fw.write(k + 1 + "." + schedule[p][k] + " ");
                     // Sorting subjects
                     subjects.add(schedule[p][k]);
@@ -151,9 +144,11 @@ public class scheduleMaker extends JFrame {
                 fw.write("\n");
             }
             fw.flush();
+            fw.close();
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Couldn't save your schedule");
         }
-        //TODO Maybe sort elements alphabetically
+
         System.out.println(subjects);
     }
 
@@ -170,7 +165,7 @@ public class scheduleMaker extends JFrame {
         JLabel[] number =new JLabel[8];
 
         ///Creating table and label
-        // TODO: Maybe make scrollable text area and simple borders.
+
         for (int p = 0; p < 5; p++) {
             wDays[p] = new JLabel();
             wDays[p].setBounds(sizeX / 32 + p * boxSizeX, sizeY / 32 + 20, boxSizeX, 20);
@@ -219,6 +214,7 @@ public class scheduleMaker extends JFrame {
                 try {
                     saveSchedule(table);
                 } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "There was a problem saving your file");
                     ex.printStackTrace();
                 }
 
@@ -241,14 +237,14 @@ public class scheduleMaker extends JFrame {
                         config.createNewFile();
                         createConfig();
                         System.out.println("Created config ln232");
-                        //Some problem test
-                    } else if (importField.getText() != "" && !importField.getText().equals(location)) {
+                    } else if (!importField.getText().equals("") && !importField.getText().equals(location)) {
                         createConfig();
                     }
 
                     loadSchedule(config);
                 }catch (IOException ex){
                         ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "There was a problem importing your file");
                     }
 
                     }
