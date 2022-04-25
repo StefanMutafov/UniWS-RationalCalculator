@@ -1,8 +1,8 @@
 import javax.swing.*;
 
 public class homework extends JFrame {
-    final int sizeX = 400;
-    final int sizeY = 400;
+    final int sizeX = 700;
+    final int sizeY = 500;
 
 
 

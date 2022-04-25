@@ -2,6 +2,9 @@
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,7 +29,7 @@ public class scheduleMaker extends JFrame {
     JButton save;
     JButton importButton;
     JLabel importLabel;
-    JTextArea[][] table = new JTextArea[5][8];
+    JTextPane[][] table = new JTextPane[5][8];
     File config = new File("src/config.txt");
 
 
@@ -104,10 +107,10 @@ public class scheduleMaker extends JFrame {
 
 
     //TODO: Make Font size And design of export Table.
-    private void saveSchedule(JTextArea[][] t) throws IOException {
+    private void saveSchedule(JTextPane[][] t) throws IOException {
         for (int p = 0; p < 5; p++) {
             for (int k = 0; k < 8; k++) {
-                schedule[p][k] = t[p][k].getText();
+                schedule[p][k] = t[p][k].getText().trim();
             }
         }
 
@@ -132,10 +135,10 @@ public class scheduleMaker extends JFrame {
                 for (int k = 0; k < 8; k++) {
                     fw.write(k + 1 + "." + schedule[p][k] + " ");
                     // Sorting subjects
-                    subjects.add(schedule[p][k]);
+                    subjects.add(schedule[p][k].trim());
                     for(int l = 0; l< subjects.size()-1; l++){
                         //System.out.println("Checking if " + subjects.getLast() +" == " +subjects.get(l));
-                        if(subjects.getLast().equals(subjects.get(l)) || subjects.getLast().isEmpty()){
+                        if(subjects.getLast().trim().equals(subjects.get(l)) || subjects.getLast().isEmpty()){
                            // System.out.println("Removed " + subjects.getLast());
                             subjects.removeLast();
                         }
@@ -156,7 +159,7 @@ public class scheduleMaker extends JFrame {
     public void buildScheduleMaker() {
         final int boxSizeX = sizeX * 3 / 20;
         final int boxSizeY = sizeY * 3 / 32;
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
+
 
         save = new JButton("Save");
         importButton = new JButton("Import");
@@ -176,15 +179,20 @@ public class scheduleMaker extends JFrame {
                 number[k].setBounds(sizeX/32 - 10, 40 + sizeY / 32 + k * boxSizeY,10, boxSizeY );
                 number[k].setText(String.valueOf(k+1));
                 add(number[k]);
-                table[p][k] = new JTextArea();
+                table[p][k] = new JTextPane();
                 table[p][k].setBounds(sizeX / 32 + p * boxSizeX, 40 + sizeY / 32 + k * boxSizeY, boxSizeX, boxSizeY);
                 table[p][k].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK),
                         BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-                table[p][k].setLineWrap(true);
-                table[p][k].setWrapStyleWord(true);
+                //Centering
+                StyledDocument doc = table[p][k].getStyledDocument();
+                SimpleAttributeSet center = new SimpleAttributeSet();
+                StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+                doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
 
                 add(table[p][k]);
             }
+
         }
 
 
@@ -195,10 +203,10 @@ public class scheduleMaker extends JFrame {
         wDays[3].setText("Четвъртък");
         wDays[4].setText("Петък");
 
-        //Loading saved schedule if excists
+        //Loading saved schedule if exists
 
 
-        System.out.println("Checking if config excists, ln 169");
+        System.out.println("Checking if config exists, ln 169");
         if (config.exists()) {
             System.out.println("Config exists, ln170");
             loadSchedule(config);
@@ -209,17 +217,15 @@ public class scheduleMaker extends JFrame {
         //importButton.setBounds(table[4][1].getX()+boxSizeX+((sizeX-table[4][1].getX()-sizeX)/4), table[4][1].getY(), (sizeX-table[4][1].getX()-sizeX)/2, boxSizeY);
         //TODO Make the scale(no numbers in setBounds())
         save.setBounds(table[4][1].getX() + boxSizeX + 50, table[4][1].getY(), 200, boxSizeY);
-        save.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    saveSchedule(table);
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "There was a problem saving your file");
-                    ex.printStackTrace();
-                }
-
-
+        save.addActionListener(e -> {
+            try {
+                saveSchedule(table);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "There was a problem saving your file");
+                ex.printStackTrace();
             }
+
+
         });
 
         //TODO Make the scale(no numbers in setBounds())
@@ -229,30 +235,23 @@ public class scheduleMaker extends JFrame {
         importLabel.setText("Enter Location");
 
         importButton.setBounds(table[4][1].getX() + boxSizeX + 50, table[4][5].getY(), 200, boxSizeY);
-        importButton.addActionListener(new ActionListener() {
+        importButton.addActionListener(e -> {
+            try {
+                if (!config.exists()) {
+                    config.createNewFile();
+                    createConfig();
+                    System.out.println("Created config ln232");
+                } else if (!importField.getText().equals("") && !importField.getText().equals(location)) {
+                    createConfig();
+                }
 
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if (!config.exists()) {
-                        config.createNewFile();
-                        createConfig();
-                        System.out.println("Created config ln232");
-                    } else if (!importField.getText().equals("") && !importField.getText().equals(location)) {
-                        createConfig();
-                    }
+                loadSchedule(config);
+            }catch (IOException ex){
+                    ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "There was a problem importing your file");
+                }
 
-                    loadSchedule(config);
-                }catch (IOException ex){
-                        ex.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "There was a problem importing your file");
-                    }
-
-                    }
-
-
-
-
-        });
+                });
 
         add(save);
         add(importLabel);

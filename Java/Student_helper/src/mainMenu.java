@@ -54,7 +54,7 @@ public class mainMenu extends JFrame {
 		homework.setBounds(sizeX/4, sizeY/2, sizeX/2, sizeY/4);
 		homework.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				new homework("Homework");
 			
 			
 			}	
