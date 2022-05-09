@@ -1,13 +1,11 @@
 // version 0.16.0.4.22.16.05
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,6 +30,11 @@ public class scheduleMaker extends JFrame {
     JTextPane[][] table = new JTextPane[5][8];
     File config = new File("src/config.txt");
 
+    public void saveSubjects(File f) throws IOException {
+        FileWriter fw = new FileWriter(f, true);
+        fw.append((CharSequence) subjects);
+
+    }
 
     public scheduleMaker(String title) {
         setTitle(title);
@@ -153,6 +156,7 @@ public class scheduleMaker extends JFrame {
         }
 
         System.out.println(subjects);
+        saveSubjects(file);
     }
 
 
