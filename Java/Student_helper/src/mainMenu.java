@@ -12,7 +12,7 @@ import javax.swing.*;
 public class mainMenu extends JFrame {
 	final int sizeX = 400;
 	final int sizeY = 400;
-
+	File file;
 	
 	public mainMenu(String title) {
 		setTitle(title);

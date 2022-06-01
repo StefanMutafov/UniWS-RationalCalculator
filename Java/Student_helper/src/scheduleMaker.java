@@ -1,14 +1,12 @@
-// version 0.16.0.4.22.16.05
+// version 0.01.0.6.22.11.31
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.security.cert.CertStoreSpi;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -31,8 +29,31 @@ public class scheduleMaker extends JFrame {
     File config = new File("src/config.txt");
 
     public void saveSubjects(File f) throws IOException {
-        FileWriter fw = new FileWriter(f, true);
-        fw.append((CharSequence) subjects);
+        FileWriter fw;
+        Scanner sc = new Scanner(f);
+       sc.nextLine();
+        if(sc.hasNextLine()){
+            sc.close();
+            sc = new Scanner(f);
+            String tmp = new String(sc.nextLine());
+            sc.close();
+            System.out.println(tmp);
+            fw = new FileWriter(f);
+            fw.append(tmp + "\n");
+            fw.append("The subjects are: ");
+            for(int i = 0; i< subjects.size();i++){
+                fw.append(subjects.get(i)+ " ");
+            }
+            sc.close();
+        }else {
+            fw = new FileWriter(f, true);
+            fw.append("\n"+"The subjects are: ");
+            for (int i = 0; i < subjects.size(); i++) {
+                fw.append(subjects.get(i) + " ");
+            }
+        }
+        fw.flush();
+       fw.close();
 
     }
 
@@ -65,7 +86,7 @@ public class scheduleMaker extends JFrame {
 
    //Loading schedule file from a cfg path
     private void loadSchedule(File config) {
-        System.out.println("Started loading schedule, ln51");
+        System.out.println("Started loading schedule, ln89");
         System.out.println("Using config at location: " + config.getPath());
 
         String line = new String();
@@ -156,7 +177,7 @@ public class scheduleMaker extends JFrame {
         }
 
         System.out.println(subjects);
-        saveSubjects(file);
+        saveSubjects(config);
     }
 
 
