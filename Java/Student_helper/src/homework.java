@@ -1,5 +1,6 @@
-// version 0.01.0.6.22.11.31
+// version 0.8.0.6.22.11.31
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
@@ -34,13 +35,26 @@ public class homework extends JFrame {
     }
 
     private void buildHomework() {
-
+        // Loading different subjects fom schedule
         try {
             loadSubjects();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        //Creating AddHomework part
+        JComboBox jc = new JComboBox(subjects.toArray(new String[0]));
+        jc.setBounds(sizeX*8/12, sizeY/8, sizeX/6, sizeY/16);
+        JLabel addHead = new JLabel("Добавяне на домашни");
+        addHead.setBounds(sizeX*7/12, sizeY/128, sizeX/3, sizeY/8);
+        addHead.setFont(new Font("Courier", Font.PLAIN, 20));
+        addHead.setHorizontalTextPosition(SwingConstants.CENTER);
+        JTextField  title = new JTextField();
+        title.setBounds(sizeX*8/12, sizeY*3/16, sizeX/6, sizeY/16);
 
+
+add(title);
+add(addHead);
+add(jc);
     }
 
 }
