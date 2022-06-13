@@ -1,8 +1,10 @@
 // version 0.8.0.6.22.11.31
 import javax.swing.*;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -43,15 +45,31 @@ public class homework extends JFrame {
         }
         //Creating AddHomework part
         JComboBox jc = new JComboBox(subjects.toArray(new String[0]));
-        jc.setBounds(sizeX*8/12, sizeY/8, sizeX/6, sizeY/16);
+        jc.setBounds(sizeX*7/12, sizeY*4/20, sizeX/3, sizeY/16);
         JLabel addHead = new JLabel("Добавяне на домашни");
-        addHead.setBounds(sizeX*7/12, sizeY/128, sizeX/3, sizeY/8);
+        JLabel titleHead = new JLabel("Заглавие");
+        JLabel dscHead = new JLabel("Описание");
+        addHead.setBounds(sizeX*7/12, sizeY/20, sizeX/3, sizeY/16);
         addHead.setFont(new Font("Courier", Font.PLAIN, 20));
-        addHead.setHorizontalTextPosition(SwingConstants.CENTER);
+        addHead.setHorizontalAlignment(SwingConstants.CENTER);
+        titleHead.setBounds(sizeX*7/12, sizeY*5/20, sizeX/3, sizeY/16);
+        titleHead.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        titleHead.setHorizontalAlignment(SwingConstants.CENTER);
         JTextField  title = new JTextField();
-        title.setBounds(sizeX*8/12, sizeY*3/16, sizeX/6, sizeY/16);
+        title.setBounds(sizeX*7/12, sizeY*6/20, sizeX/3, sizeY/16);
+        JTextArea textArea = new JTextArea();
+        dscHead.setBounds(sizeX*7/12, sizeY*7/20, sizeX/3, sizeY/16);
+        dscHead.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        dscHead.setHorizontalAlignment(SwingConstants.CENTER);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
 
+        JScrollPane description = new JScrollPane(textArea);
+        description.setBounds(sizeX*7/12,sizeY*8/20,sizeX/3, sizeY/4 );
 
+add(titleHead);
+add(dscHead);
+add(description);
 add(title);
 add(addHead);
 add(jc);

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLOutput;
+import java.util.Date;
 import java.util.LinkedList;
 
 import javax.swing.*;
@@ -45,7 +46,6 @@ public class mainMenu extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 
 				new scheduleMaker("Your schedule");
-
 			}	
 		});
 		
