@@ -115,12 +115,13 @@ public class scheduleMaker extends JFrame {
                     for(int l = 0; l< subjects.size()-1; l++){
                         //System.out.println("Checking if " + subjects.getLast() +" == " +subjects.get(l));
                         if(subjects.getLast().equals(subjects.get(l)) || subjects.getLast().isEmpty()){
-                            // System.out.println("Removed " + subjects.getLast());
+                            //System.out.println("Removed " + subjects.getLast());
                             subjects.removeLast();
                         }
                     }
                     System.out.println("Table " + p + ":" + k + " is " + table[p][k].getText());
                 }
+
             }
             System.out.println(subjects);
         } catch (IOException e) {
