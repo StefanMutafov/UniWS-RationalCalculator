@@ -1,9 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.LinkedList;
 
 
 public class addSingGUI extends JFrame {
+    Connection con;
+    PreparedStatement ps;
+    ResultSet rs;
+    int new_id;
+    String new_fName, new_lName, new_nationality, new_style;
+    LinkedList<Integer> oldId = new LinkedList();
     final int sizeX = 400;
     final int sizeY = 400;
     public addSingGUI(String title){
@@ -20,7 +29,7 @@ public class addSingGUI extends JFrame {
 
     private void buildSingGui() {
         //GUI
-            //Labels
+        //Labels
         JLabel l_id = new JLabel("ID");
         l_id.setBounds(sizeX/4, sizeY/8, sizeX/4, sizeY/8);
         l_id.setFont(new Font("Courier", Font.PLAIN, 17));
@@ -42,7 +51,7 @@ public class addSingGUI extends JFrame {
         l_style.setFont(new Font("Courier", Font.PLAIN, 17));
         l_style.setHorizontalAlignment(SwingConstants.CENTER);
 
-            //Text Areas
+        //Text Areas
         JTextField id = new JTextField();
         id.setBounds(sizeX/2, sizeY/8, sizeX/4, sizeY/8);
 
@@ -58,27 +67,74 @@ public class addSingGUI extends JFrame {
         JTextField style = new JTextField();
         style.setBounds(sizeX/2, sizeY*5/8, sizeX/4, sizeY/8);
 
+        JButton add = new JButton("Add");
+        add.setBounds(sizeX/4, sizeY*6/8, sizeX/2, sizeY/8);
+        add.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Pressed Add");
+
+                //Database
+
+                String db="jdbc:mysql://127.0.0.1:3306/concerts";
+                String user="root";
+                String pass="St951659";
+                try {
+                    //Connecting to DB
+                    con= DriverManager.getConnection(db,user,pass);
+                    if(con != null){System.out.println("Connection to db for addSinger successful!");}else{ System.out.println("Connection to db for addSinger NOT successful!");}
+                    //Getting IDs from DB
+                    ps=con.prepareStatement("SELECT id FROM singers");
+                    rs=ps.executeQuery();
+                    while(rs.next()){
+                        oldId.add(rs.getInt(1));
+                    }
+                    ps.close();
+                    rs.close();
+                    con.close();
+
+                } catch (SQLException exe) {
+                    throw new RuntimeException(exe);
+                }
+
+                boolean check = true;
+                //Getting singer info
+                new_id = Integer.parseInt((id.getText()));
+                for(int i =0; i<oldId.size();i++){
+                    if(oldId.get(i) == new_id){
+                        id.setText("");
+                        JOptionPane.showMessageDialog(null, "The ID you entered, already exists!");
+                        check = false;
+                        break;
+                    }
+                }
+                if(check) {
+                    new_fName = fName.getText();
+                    new_lName = lName.getText();
+                    new_nationality = nationality.getText();
+                    new_style = style.getText();
+
+                    try {
+                        //Connecting to DB
+                        con= DriverManager.getConnection(db,user,pass);
+                        if(con != null){System.out.println("Connection to db for addSinger successful!");}else{ System.out.println("Connection to db for addSinger NOT successful!");}
+                        //New Singer Quarry
+                        ps=con.prepareStatement("INSERT INTO singers VALUES(new_id,new_fName,new_lName,new_nationality,new_style)");
+                        ps.execute();
+                        ps.close();
+                        rs.close();
+                        con.close();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
 
 
-        //Database
-        Connection con;
-        PreparedStatement ps;
-        ResultSet rs;
-        int rows;
-        boolean run=true;
-        String db="jdbc:mysql://127.0.0.1:3306/concerts";
-        String user="root";
-        String pass="StefanM951659";
-        try {
-            con= DriverManager.getConnection(db,user,pass);
-            if(con != null){System.out.println("Connection to db for addSinger successful!");}else{ System.out.println("Connection to db for addSinger NOT successful!");}
+
+                    System.out.println("Added new singer!");
+                }
 
 
-
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+            }
+        });
 
 
         add(l_id);
@@ -91,7 +147,9 @@ public class addSingGUI extends JFrame {
         add(lName);
         add(nationality);
         add(style);
+        add(add);
         repaint();
+        System.out.println("Successfully build AddSingerGUI");
     }//end of build
 
 
