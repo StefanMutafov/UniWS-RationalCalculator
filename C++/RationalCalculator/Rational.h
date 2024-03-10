@@ -1,0 +1,14 @@
+//
+// Created by Stefan on 10/03/2024.
+//
+
+#ifndef RATIONALCALCULATOR_RATIONAL_H
+#define RATIONALCALCULATOR_RATIONAL_H
+
+
+class Rational {
+
+};
+
+
+#endif //RATIONALCALCULATOR_RATIONAL_H
