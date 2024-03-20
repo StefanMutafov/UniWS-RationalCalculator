@@ -12,37 +12,50 @@ class Rational {
 public:
     /* Constructors */
     Rational();
+
     Rational(int num, int den);
+
     explicit Rational(int num);
-    explicit Rational(std::string str);
+
+    explicit Rational(const std::string &str);
 
     /* Accessors */
-    int getNum() const;
-    int getDen() const;
-    std::string str() const;
+    [[nodiscard]] int getNum() const;
 
-    bool is_pos() const;
-    bool is_neg() const;
-    bool is_inf() const;
-    bool is_nan() const;
+    [[nodiscard]] int getDen() const;
+
+    [[nodiscard]] std::string str() const;
+
+    [[nodiscard]] bool is_pos() const;
+
+    [[nodiscard]] bool is_neg() const;
+
+    [[nodiscard]] bool is_inf() const;
+
+    [[nodiscard]] bool is_nan() const;
 
     /* Modifiers */
     void set(int num, int den);
-    void str(std::string s);
+
+    void str(const std::string &s);
 
     /* Operators */
-    Rational add(Rational b) const;
-    Rational sub(Rational b) const;
-    Rational mul(Rational b) const;
-    Rational div(Rational b) const;
+    [[nodiscard]] Rational add(Rational b) const;
+
+    [[nodiscard]] Rational sub(Rational b) const;
+
+    [[nodiscard]] Rational mul(Rational b) const;
+
+    [[nodiscard]] Rational div(Rational b) const;
+
+    [[nodiscard]] Rational pow(int n) const;
+
+    [[nodiscard]] Rational sqrt() const;
 
 private:
     int num_;
     int den_;
 };
-
-
-
 
 
 #endif //RATIONALCALCULATOR_RATIONAL_H
